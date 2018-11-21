@@ -9,10 +9,8 @@ import sys
 from setuptools import Command, Extension, setup, find_packages
 from setuptools.command.test import test as TestCommand
 
-import glove
-
 DESCRIPTION = __doc__
-VERSION = glove.__version__
+VERSION = "0.2.0"
 
 def define_extensions(cythonize=False):
 
@@ -35,7 +33,6 @@ def define_extensions(cythonize=False):
         glove_cython = "glove/glove_cython.c"
         glove_metrics = "glove/metrics/accuracy_cython.c"
         glove_corpus = "glove/corpus_cython.cpp"
-
     return [Extension("glove.glove_cython", [glove_cython],
                       extra_link_args=["-fopenmp"],
                       extra_compile_args=compile_args),
