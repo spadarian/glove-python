@@ -1,6 +1,17 @@
 # glove-python
 
-[![Circle CI](https://circleci.com/gh/maciejkula/glove-python.svg?style=svg)](https://circleci.com/gh/maciejkula/glove-python)
+[![Build Status](https://travis-ci.org/spadarian/glove-python.svg?branch=master)](https://travis-ci.org/spadarian/glove-python)
+
+This is a fork. You can find the original project here: https://github.com/maciejkula/glove-python.
+
+Relevant differences:
+
+* _Warm start_ to be able to resume training (https://github.com/maciejkula/glove-python/pull/89)
+* Add support for exporting model to word2vec format (https://github.com/maciejkula/glove-python/pull/75)
+
+
+---
+# Original description
 
 A toy python implementation of [GloVe](http://www-nlp.stanford.edu/projects/glove/).
 

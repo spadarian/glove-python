@@ -1,3 +1,5 @@
+"""Python implementation of Global Vectors for Word Representation (GloVe)"""
+
 import glob
 import os
 import platform
@@ -7,6 +9,10 @@ import sys
 from setuptools import Command, Extension, setup, find_packages
 from setuptools.command.test import test as TestCommand
 
+import glove
+
+DESCRIPTION = __doc__
+VERSION = glove.__version__
 
 def define_extensions(cythonize=False):
 
@@ -137,17 +143,15 @@ class PyTest(TestCommand):
 
 setup(
     name='glove_python',
-    version='0.1.0',
-    description=('Python implementation of Global Vectors '
-                 'for Word Representation (GloVe)'),
+    version=VERSION,
+    description=DESCRIPTION,
     long_description='',
     packages=find_packages(),
     install_requires=['numpy', 'scipy', 'gensim'],
     tests_require=['pytest'],
     cmdclass={'test': PyTest, 'cythonize': Cythonize, 'clean': Clean},
-    author='Maciej Kula',
-    url='https://github.com/maciejkula/glove-python',
-    download_url='https://github.com/maciejkula/glove-python/tarball/0.1.0',
+    author='José Padarian',
+    url='https://github.com/spadarian/glove-python',
     license='Apache 2.0',
     classifiers=['Development Status :: 3 - Alpha',
                  'License :: OSI Approved :: Apache Software License',
