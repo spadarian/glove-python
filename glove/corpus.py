@@ -8,6 +8,7 @@ except ImportError:
     import pickle
 
 from .corpus_cython import construct_cooccurrence_matrix
+import warnings
 
 
 class Corpus(object):
@@ -71,7 +72,7 @@ class Corpus(object):
     def save(self, filename):
 
         with open(filename, 'wb') as savefile:
-            pickle.dump((self.dictionary, self.matrix),
+            pickle.dump((self.dictionary, self.matrix, self.word_count),
                         savefile,
                         protocol=pickle.HIGHEST_PROTOCOL)
 
@@ -81,6 +82,14 @@ class Corpus(object):
         instance = cls()
 
         with open(filename, 'rb') as savefile:
-            instance.dictionary, instance.matrix = pickle.load(savefile)
+            data = pickle.load(savefile)
+            instance.dictionary = data[0]
+            instance.matrix = data[1]
+            if len(data) == 2:
+                msg = 'This is a legacy version corpus. The word_count attribute is not available.'
+                warnings.warn(msg)
+                instance.word_count = {}
+            else:
+                instance.word_count = data[2]
 
         return instance
