@@ -25,6 +25,7 @@ class Corpus(object):
         self.dictionary = {}
         self.dictionary_supplied = False
         self.matrix = None
+        self.word_count = None
 
         if dictionary is not None:
             self._check_dict(dictionary)
@@ -40,7 +41,7 @@ class Corpus(object):
         if np.min(list(dictionary.values())) != 0:
             raise Exception('Dictionary ids should start at zero')
 
-    def fit(self, corpus, window=10, ignore_missing=False):
+    def fit(self, corpus, window=10, ignore_missing=False, min_count=5):
         """
         Perform a pass through the corpus to construct
         the cooccurrence matrix.
@@ -55,13 +56,17 @@ class Corpus(object):
                                even if out-of-vocabulary words are
                                ignored.
                                If False, a KeyError is raised.
+        - int min_count: ignore all words with total frequency lower than this.
         """
 
-        self.matrix = construct_cooccurrence_matrix(corpus,
-                                                    self.dictionary,
-                                                    int(self.dictionary_supplied),
-                                                    int(window),
-                                                    int(ignore_missing))
+        matrix, word_count = construct_cooccurrence_matrix(corpus,
+                                                           self.dictionary,
+                                                           int(self.dictionary_supplied),
+                                                           int(window),
+                                                           int(ignore_missing),
+                                                           int(min_count))
+        self.matrix = matrix
+        self.word_count = word_count
 
     def save(self, filename):
 

@@ -2,6 +2,8 @@
 # distutils: language = c++
 # cython: boundscheck=False, wraparound=False, nonecheck=False, cdivision=True
 
+from collections import Counter
+
 import numpy as np
 import scipy.sparse as sp
 
@@ -215,7 +217,8 @@ cdef int words_to_ids(list words, vector[int]& word_ids,
 
 
 def construct_cooccurrence_matrix(corpus, dictionary, int supplied,
-                                  int window_size, int ignore_missing):
+                                  int window_size, int ignore_missing,
+                                  int min_count):
     """
     Construct the word-id dictionary and cooccurrence matrix for
     a given corpus, using a given window size.
@@ -231,16 +234,25 @@ def construct_cooccurrence_matrix(corpus, dictionary, int supplied,
     cdef int i, j, outer_word, inner_word
     cdef int wordslen, window_stop, error
     cdef vector[int] word_ids
-
     # Pre-allocate some reasonable size
     # for the word ids vector.
     word_ids.reserve(1000)
 
+
+    word_count = Counter()
+    final_word_count = {}
     # Iterate over the corpus.
     for words in corpus:
 
+        sub_count = Counter(words)
+        word_count.update(sub_count)
+        accepted_words = []
+        for word in words:
+            if word_count[word] >= min_count:
+                accepted_words.append(word)
+                final_word_count[word] = word_count[word]
         # Convert words to a numeric vector.
-        error = words_to_ids(words, word_ids, dictionary,
+        error = words_to_ids(accepted_words, word_ids, dictionary,
                              supplied, ignore_missing)
         if error == -1:
             raise KeyError('Word missing from dictionary')
@@ -282,4 +294,4 @@ def construct_cooccurrence_matrix(corpus, dictionary, int supplied,
     mat = matrix_to_coo(matrix, len(dictionary))
     free_matrix(matrix)
 
-    return mat
+    return mat, final_word_count

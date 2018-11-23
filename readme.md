@@ -8,6 +8,7 @@ Relevant differences:
 
 * _Warm start_ to be able to resume training (https://github.com/maciejkula/glove-python/pull/89)
 * Add support for exporting model to word2vec format (https://github.com/maciejkula/glove-python/pull/75)
+* Option to exclude less frequent words ([`Corpus.fit`](https://github.com/spadarian/glove-python/blob/master/glove/corpus.py#L44))
 
 
 ---
